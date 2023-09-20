@@ -1,95 +1,107 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep 12 18:28:18 2023
+#                                 . Preprocessing phase.
 
-@author: helali meriem
-"""
 
-#----------------- Preprocessing phase: ---------------------------------------
-
+#importing the dataset : 
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 data = pd.read_csv(r"C:\Users\dell\Downloads\titanic-passengers.csv",delimiter=';')
 df=pd.DataFrame(data)
 
-#showing the head of the dataset
+#showing the head of the dataset:
 print("Head of the dataset:")
-df.head()
+print()
+print(df.head())
+print("*********************************************************************")
 
-# Get general information about the data columns and values
+# Get general information about the data columns and values:
 print("\nGeneral information about the dataset:")
+print()
 print(df.info())
 
-# Find missing values in the DataFrame
+print("*********************************************************************")
+
+# Find missing values in the DataFrame:
 missing_values = df.isnull().sum()
 print("Missing values in each column:")
+print()
 print(missing_values)
 
-#replace missing with the appropriate values.
-   #numerical values
+print("*********************************************************************")
+
+#replace missing with the appropriate values:
+   #numerical values: 
+print("replace missing with the appropriate values :")
+print()
 df['Age'].fillna(df['Age'].mean(),inplace=True)
-df
+print(df)
+print("*********************************************************************")
 
-   #categorical values
+   #categorical values:
 #replace missing values in categorical columns(Cabin) with the mode (the most frequent category) 
+print("replace missing values in categorical columns(Cabin) with the mode :")
+print()
 df['Cabin'].fillna(df['Cabin'].mode()[0], inplace=True)
-df
+print(df['Cabin'])
 
+
+print()
+print()
+
+print("replace missing values in categorical columns(Embarked) with the mode :")
+print()
 df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
-df
+print(df['Embarked'])
 
-#----------------- Visualization phase ---------------------------------------
-#studying the distribution of the most important features
-#after studing the situation the most impotant features are : Survived , Age and Sex
+print("*********************************************************************")
 
-plt.title("Histogram of diffrent ages")
-plt.xlabel("Age")
-df['Age'].plot.hist(color='blue')
-plt.show()
+#confirm that we don't have missing values:
+print("confirm that we don't have missing values:")
+print()
+missing_values = df.isnull().sum()
+print(missing_values)
 
-plt.title("Barplot of Survived people")
-plt.xlabel("Survived")
-plt.ylabel("number of survived people")
-vc =df['Survived'].value_counts()
-vc.plot.bar(rot=45)
-plt.show()
 
-plt.title("Barplot of Sex")
-plt.xlabel("Sex")
-plt.ylabel("")
-vc =df['Sex'].value_counts()
-vc.plot.bar(rot=45)
-plt.show()
 
-#Visualize the correlation between Sex and Age
-sns.violinplot(x='Sex', y='Age', hue='Survived', data=df, split=True)
+#                                 . Visualization phase .
 
-plt.title("Correlation between Sex and Age with Survival")
-plt.xlabel("Sex")
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import style
+import seaborn as sns
+
+print("studying the distribution of age and sex :")
+style.use('ggplot')
+color=['royalblue']
+plt.bar(df['Sex'],df['Age'], color=color,width=0.5)
+plt.xlabel("sex")
 plt.ylabel("Age")
-plt.legend(title='Survived', labels=['No', 'Yes'])
-
+plt.title(' study the distribution of sex in relation to age')
 plt.show()
 
-#Pick two other features and study their impact on the survival of the individuals.
+print('Visualize the correlation between Sex and Age:')
+correlation = sns.FacetGrid(df,col='Sex')
+correlation.map(plt.hist,'Age',bins=20)
+print()
+print("we can observe that the largest number of passengers on the Titanic are men, especially between [0 - 60] years old. And between [60 - 80] we can say that there are not many women at this age ")
 
-#Have a look at this function:
+print("Pick two other features and study their impact on the survival of the individuals")
+print('Visualize the correlation between Sex and Age:')
+correlation = sns.FacetGrid(df,col='Survived')
+correlation.map(plt.hist,'Cabin')
+print()
+
+
 def plot_correlation_map( df ):
-    corr = df.corr()
-    s , ax = plt.subplots( figsize =( 12 , 10 ) )
-    cmap = sns.diverging_palette( 220 , 10 , as_cmap = True )
-    s = sns.heatmap(
-    corr,
-    cmap = cmap,
-    square=True,
-    cbar_kws={ 'shrink' : .9 },
-    ax=ax,
-    annot = True,
-    annot_kws = { 'fontsize' : 12 }
+corr = df.corr()
+s , ax = plt.subplots( figsize =( 12 , 10 ) )
+cmap = sns.diverging_palette( 220 , 10 , as_cmap = True )
+s = sns.heatmap(
+corr,
+cmap = cmap,
+square=True,
+cbar_kws={ 'shrink' : .9 },
+ax=ax,
+annot = True,
+annot_kws = { 'fontsize' : 12 }
 )
-
 
 
 
