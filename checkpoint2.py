@@ -70,38 +70,70 @@ import seaborn as sns
 print("studying the distribution of age and sex :")
 style.use('ggplot')
 color=['royalblue']
-plt.bar(df['Sex'],df['Age'], color=color,width=0.5)
-plt.xlabel("sex")
-plt.ylabel("Age")
-plt.title(' study the distribution of sex in relation to age')
+
+data['Sex'].value_counts().plot(kind="pie", autopct="%.2f")
 plt.show()
+print("we can observe that the largest number of passengers on the Titanic are men")
 
-print('Visualize the correlation between Sex and Age:')
-correlation = sns.FacetGrid(df,col='Sex')
-correlation.map(plt.hist,'Age',bins=20)
-print()
-print("we can observe that the largest number of passengers on the Titanic are men, especially between [0 - 60] years old. And between [60 - 80] we can say that there are not many women at this age ")
 
-print("Pick two other features and study their impact on the survival of the individuals")
-print('Visualize the correlation between Sex and Age:')
-correlation = sns.FacetGrid(df,col='Survived')
-correlation.map(plt.hist,'Cabin')
+sns.displot(data['Age'])
+plt.title("Age distribution :")
+plt.show()
+print("we can observe that the largest number of passengers on the Titanic are young people (between 20-40)")
+
+print("*********************************************************************")
 print()
 
+print('Visualize the correlation between Sex and Age:')
+sns.countplot(x='Survived',hue ='Sex',data=df)
+plt.show()
+print("we can observe that the largest number of female survivors on the Titanic then male ")
 
-def plot_correlation_map( df ):
-corr = df.corr()
-s , ax = plt.subplots( figsize =( 12 , 10 ) )
-cmap = sns.diverging_palette( 220 , 10 , as_cmap = True )
-s = sns.heatmap(
-corr,
-cmap = cmap,
-square=True,
-cbar_kws={ 'shrink' : .9 },
-ax=ax,
-annot = True,
-annot_kws = { 'fontsize' : 12 }
-)
+titanic=sns.FacetGrid(df,col="Survived")
+titanic.map(plt.hist,"Age",bins=10)
+plt.show()
+print()
+print("we can observe that the largest number of young passengers on the Titanic are not survived ")
+
+
+
+print()
+print("*********************************************************************")
+cleanup={"Survived":{"yes":1,"no":0}}
+df.replace(cleanup,inplace=True)
+print(df[["Pclass","Survived"]].groupby(["Pclass"],as_index=True).mean())
+
+print()
+print("*********************************************************************")
+# Drop the 'Names' column
+df = df.drop(columns=['Name'])
+
+# Print the resulting DataFrame
+print(df)
+
+
+print()
+print("*********************************************************************")
+Title_Dictionary = {
+    "Capt": "Officer",
+    "Col": "Officer",
+    "Major": "Officer",
+    "Dr": "Officer",
+    "Rev": "Officer",
+    "Jonkheer": "Royalty",
+    "Don": "Royalty",
+    "Sir": "Royalty",
+    "Lady": "Royalty",
+    "theCountess": "Royalty",
+    "Dona": "Royalty",
+    "Mme": "Miss",
+    "Mlle": "Miss",
+    "Miss": "Miss",
+    "Ms": "Mrs",
+    "Mr": "Mrs",
+    "Mrs": "Mrs",  
+    "Master": "Master"
+}
 
 
 
